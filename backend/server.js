@@ -17,19 +17,25 @@ const __dirname = path.resolve();
 
 dotenv.config();
 app.use(express.json());
-app.use(cors());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")))
 
-app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+// });
 
 app.use("/api/auth", authRoutes)
 app.use("/api/messages", messageRoutes)
 app.use("/api/users", userRoutes)
 
+const corsOptions = {
+    origin: 'http://localhost:3000', // Allow requests from this origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies to be sent with requests
+    optionsSuccessStatus: 204
+  };
+app.use(cors(corsOptions));
 server.listen(PORT, () => {
     connectToMongoDB()
     console.log(`server running on port ${PORT}`)
